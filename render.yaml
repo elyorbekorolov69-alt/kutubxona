@@ -1,0 +1,21 @@
+# Render Blueprint: backendni (API + sayt) serverga joylashtirish.
+# Render'da: New → Blueprint → shu repozitoriyani tanlang.
+# DATABASE_URL va FRONTEND_URL ni Render panelida qo'lda kiriting (maxfiy, bu faylga yozilmaydi).
+
+services:
+  - type: web
+    name: kutubxona
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
