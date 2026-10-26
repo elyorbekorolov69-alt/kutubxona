@@ -5,7 +5,10 @@ window.SOZLAMA = {
   // Backend manzili.
   // - Sayt backendning o'zidan ochilsa (http://localhost:3000 yoki haqiqiy domen): bo'sh qoldiring.
   // - VS Code "Live Server" (5500-port) dan ochsangiz: backend 3000-portda deb hisoblaymiz.
-  API_URL: location.port === "5500" ? "http://localhost:3000" : "",
+  // - GitHub Pages (github.io) dan ochilsa: Render'dagi backendga ulanadi.
+  API_URL: location.port === "5500" ? "http://localhost:3000"
+    : location.hostname.endsWith("github.io") ? "https://kutubxona-2-sg5l.onrender.com"
+    : "",
 
   // Kirish oynasida sinov akkauntlari ro'yxatini ko'rsatish.
   // Haqiqiy maktabda ishga tushirishdan oldin ALBATTA false qiling!
