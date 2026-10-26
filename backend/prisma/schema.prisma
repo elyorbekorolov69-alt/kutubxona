@@ -1,0 +1,127 @@
+// Maktab kutubxonasi platformasi: ma'lumotlar bazasi sxemasi
+// Baza: PostgreSQL (hozir Supabase bepul tarifida, keyin O'zbekistondagi serverda)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  oquvchi
+  kutubxonachi
+  direktor
+  nazorat
+}
+
+enum BuyurtmaHolati {
+  direktor      // direktor ko'rib chiqmoqda
+  nazorat       // direktor tasdiqladi, nazoratda
+  tasdiqlandi   // nazorat ham tasdiqladi
+  rad_direktor
+  rad_nazorat
+}
+
+model Maktab {
+  id            Int             @id @default(autoincrement())
+  nomi          String          // "12-maktab"
+  tuman         String
+  viloyat       String
+  foydalanuvchi Foydalanuvchi[]
+  kitoblar      Kitob[]
+  buyurtmalar   Buyurtma[]
+}
+
+model Foydalanuvchi {
+  id         Int      @id @default(autoincrement())
+  login      String   @unique
+  parolHash  String   // parol hech qachon ochiq saqlanmaydi
+  rol        Rol
+  ism        String
+  maktabId   Int?     // nazorat organi uchun bo'sh bo'ladi
+  maktab     Maktab?  @relation(fields: [maktabId], references: [id])
+  sinf       String?  // faqat o'quvchi uchun: "7-B"
+  sinfRaqam  Int?     // sinf raqami: 7-B -> 7 (keyingi sinfga o'tkazish uchun)
+  holat      String   @default("faol") // faol | bitirgan (11-sinfni tugatgan, kirish yopiq)
+  otaOnaTel  String?  // faqat o'quvchi uchun, faqat kutubxonachi ko'radi
+  ozTel      String?
+  rozilik    Boolean  @default(false) // ota-ona roziligi olingan
+  yillikMaqsad Int    @default(10)
+  yaratilgan DateTime @default(now())
+  yozuvlar   Yozuv[]
+  sovgalar   Sovga[]
+}
+
+// Direktor bergan sovg'alar: bir o'quvchiga bir yilda bitta
+model Sovga {
+  id        Int           @id @default(autoincrement())
+  oquvchiId Int
+  oquvchi   Foydalanuvchi @relation(fields: [oquvchiId], references: [id])
+  yil       Int
+  daraja    String
+  sana      DateTime      @default(now())
+
+  @@unique([oquvchiId, yil])
+}
+
+model Kitob {
+  id         Int     @id @default(autoincrement())
+  maktabId   Int
+  maktab     Maktab  @relation(fields: [maktabId], references: [id])
+  nomi       String
+  muallif    String
+  nusxaSoni  Int     @default(1)
+  tur        String  @default("kitob") // kitob | darslik
+  sinfRaqam  Int?    // faqat darslik uchun: qaysi sinf darsligi (1-11)
+  yozuvlar   Yozuv[]
+}
+
+// O'quv yillari: yil = yil tugaydigan yil (2026-2027 o'quv yili -> 2027)
+model OquvYili {
+  yil            Int       @id
+  sinfOtkazildi  DateTime?
+}
+
+// Kitob olish tarixi. Bu jadvaldan HECH QACHON o'chirilmaydi:
+// kitob qaytarilganda faqat "qaytarilgan" sanasi yoziladi.
+model Yozuv {
+  id          Int           @id @default(autoincrement())
+  oquvchiId   Int
+  oquvchi     Foydalanuvchi @relation(fields: [oquvchiId], references: [id])
+  kitobId     Int
+  kitob       Kitob         @relation(fields: [kitobId], references: [id])
+  olingan     DateTime      @db.Date
+  muddat      DateTime      @db.Date
+  qaytarilgan DateTime?     @db.Date
+  sinf        String?       // olingan paytdagi sinf (sinf o'tkazilgandan keyin ham shu qoladi)
+  yoqolgan    DateTime?     @db.Date // darslik yo'qolgan/yirtilgan deb qayd etilgan sana
+
+  @@index([oquvchiId])
+  @@index([qaytarilgan])
+}
+
+model Buyurtma {
+  id        Int             @id @default(autoincrement())
+  maktabId  Int
+  maktab    Maktab          @relation(fields: [maktabId], references: [id])
+  kitobNomi String
+  muallif   String?
+  soni      Int
+  sabab     String?
+  holat     BuyurtmaHolati  @default(direktor)
+  yaratilgan DateTime       @default(now())
+  tarix     BuyurtmaTarixi[]
+}
+
+model BuyurtmaTarixi {
+  id         Int      @id @default(autoincrement())
+  buyurtmaId Int
+  buyurtma   Buyurtma @relation(fields: [buyurtmaId], references: [id])
+  kim        String   // "Kutubxonachi", "Direktor", "Nazorat organi"
+  matn       String   // "Tasdiqladi", "Rad etdi" ...
+  izoh       String?
+  sana       DateTime @default(now())
+}

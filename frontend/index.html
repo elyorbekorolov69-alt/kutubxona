@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maktab kutubxonasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="ekranlar">
+<!-- ================= 1. TIZIMGA KIRISH VARAG'I (birinchi oyna) ================= -->
+<section class="ekran" id="ekranKirish">
+  <div class="kirish-quti">
+    <form class="forma" id="kirishForma" novalidate>
+      <div>
+        <h2>Tizimga kirish</h2>
+        <p class="izoh">Login va parolingizni kiriting. Tizim kimligingizni o'zi aniqlaydi.</p>
+      </div>
+
+      <div class="maydon" id="loginMaydon">
+        <label for="login">Login</label>
+        <input id="login" name="login" type="text" autocomplete="username" placeholder="Loginingiz">
+        <div class="xato-matn" id="loginXato"></div>
+      </div>
+
+      <div class="maydon" id="parolMaydon">
+        <label for="parol">Parol</label>
+        <div class="parol-quti">
+          <input id="parol" name="parol" type="password" autocomplete="current-password" placeholder="Parolingiz">
+          <button type="button" class="korsat" id="korsatBtn" aria-controls="parol">Ko'rsat</button>
+        </div>
+        <div class="xato-matn" id="parolXato"></div>
+      </div>
+
+      <div class="qator">
+        <label for="eslab"><input type="checkbox" id="eslab"> Meni eslab qol</label>
+        <a href="#" id="unutdim">Parolni unutdingizmi?</a>
+      </div>
+
+      <button type="submit" class="kirish-btn" id="kirishBtn">Kirish</button>
+      <div class="natija" id="natija" role="status" hidden></div>
+
+      <details class="sinov" id="sinovBlok" hidden>
+        <summary>Sinov akkauntlari</summary>
+        <p class="sinov-izoh">Bosing: login va parol o'zi yoziladi, keyin "Kirish"ni bosing.</p>
+        <div class="sinov-royxat" id="sinovRoyxat"></div>
+      </details>
+
+      <p class="pastki">Akkauntingiz yo'qmi? O'quvchilarga akkauntni maktab kutubxonachisi ochib beradi.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ================= O'QUVCHI OYNASI ================= -->
+<section class="ekran" id="ekranOquvchi" hidden>
+  <header class="yuqori">
+    <div class="yuqori-ichi">
+      <div class="logo">
+        <span class="mini-javon" aria-hidden="true">
+          <i style="height:14px;background:var(--b1)"></i><i style="height:18px;background:var(--b2)"></i><i style="height:12px;background:var(--b3)"></i><i style="height:16px;background:var(--b4)"></i><i style="height:15px;background:var(--b5)"></i>
+        </span>
+        Maktab kutubxonasi
+      </div>
+      <div class="foydalanuvchi">
+        <span class="avatar" aria-hidden="true" data-avatar></span>
+        <span class="ism-top" data-ism></span>
+        <button type="button" class="ovoz-btn">Ovoz: yoqiq</button>
+        <button type="button" class="chiqish" id="chiqishBtn">Chiqish</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="kabinet">
+    <div class="salom-qator">
+      <div class="salom">
+        <h1 id="oqSalom"></h1>
+        <p id="oqMalumot"></p>
+      </div>
+    </div>
+    <div class="ogoh" id="oqOgoh" role="alert" hidden></div>
+
+    <div class="panjara">
+      <div class="ustun">
+        <section class="karta">
+          <h2>Qo'limdagi kitob</h2>
+          <p class="bosh-xabar" id="joriyBosh" hidden>Hozir qo'lingizda kitob yo'q. Kutubxonaga kelib, yangi kitob tanlang!</p>
+          <div class="joriy" id="joriyBlok">
+            <div class="joriy-muqova" aria-hidden="true"></div>
+            <div class="joriy-matn">
+              <h3 id="joriyNom"></h3>
+              <p class="muallif" id="joriyMuallif"></p>
+              <div class="sanalar">
+                <div><span>Olingan</span><b id="joriyOlingan"></b></div>
+                <div><span>Qaytarish muddati</span><b id="joriyMuddat"></b></div>
+                <div><span class="chip" id="muddatChip"></span></div>
+              </div>
+              <div class="vaqt-chiziq"><i id="vaqtChiziq"></i></div>
+              <div class="vaqt-izoh"><span>Olingan kun</span><span>Muddat</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="karta">
+          <div class="karta-bosh">
+            <h2>O'qigan kitoblarim</h2>
+            <input class="qidiruv" id="tarixQidiruv" type="search" placeholder="Kitob yoki muallif..." aria-label="Tarixdan qidirish">
+          </div>
+          <div class="jadval-quti">
+            <table>
+              <thead><tr><th>Kitob</th><th>Muallif</th><th>Olingan</th><th>Qaytarilgan</th><th>Holat</th></tr></thead>
+              <tbody id="tarixJadval"></tbody>
+            </table>
+          </div>
+          <p class="bosh-xabar" id="tarixBosh" hidden>Bu so'z bo'yicha kitob topilmadi.</p>
+        </section>
+      </div>
+
+      <div class="ustun">
+        <section class="karta">
+          <h2>Yillik maqsad</h2>
+          <div class="maqsad-son"><span id="maqsadSon"></span><small id="maqsadJami"></small></div>
+          <div class="maqsad-chiziq"><i id="maqsadChiziq"></i></div>
+          <p class="izoh2" id="maqsadIzoh"></p>
+        </section>
+
+        <section class="karta">
+          <h2>Ko'rsatkichlarim</h2>
+          <div class="korsatkich">
+            <div><b id="kOqilgan"></b><span>o'qilgan kitob</span></div>
+            <div><b id="kVaqtida"></b><span>o'z vaqtida qaytarilgan</span></div>
+            <div><b id="kOrin"></b><span>sinfdagi o'rin</span></div>
+          </div>
+          <div class="yutuqlar" id="yutuqlar"></div>
+        </section>
+
+        <section class="karta">
+          <h2 id="oqReytingSarlavha"></h2>
+          <ol class="reyting" id="reyting"></ol>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KUTUBXONACHI OYNASI ================= -->
+<section class="ekran" id="ekranKutubxonachi" hidden>
+  <header class="yuqori">
+    <div class="yuqori-ichi">
+      <div class="logo">
+        <span class="mini-javon" aria-hidden="true">
+          <i style="height:14px;background:var(--b1)"></i><i style="height:18px;background:var(--b2)"></i><i style="height:12px;background:var(--b3)"></i><i style="height:16px;background:var(--b4)"></i><i style="height:15px;background:var(--b5)"></i>
+        </span>
+        Maktab kutubxonasi
+      </div>
+      <div class="foydalanuvchi">
+        <div class="qongiroq-quti">
+          <button type="button" class="qongiroq" id="qongiroqBtn" aria-label="Bildirishnomalar" aria-expanded="false" aria-controls="bildirishPanel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="nishon" id="bildirishSon" hidden></span>
+          </button>
+          <div class="bildirish-panel" id="bildirishPanel" hidden>
+            <div class="bp-bosh"><b>Bildirishnomalar</b><span id="bpIzoh"></span></div>
+            <ul id="bildirishRoyxat"></ul>
+          </div>
+        </div>
+        <span class="avatar" aria-hidden="true" data-avatar></span>
+        <span class="ism-top" data-ism></span>
+        <button type="button" class="ovoz-btn">Ovoz: yoqiq</button>
+        <button type="button" class="chiqish" id="chiqishBtn2">Chiqish</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="kabinet">
+    <div class="salom-qator">
+      <div class="salom">
+        <h1 id="kutSalom">Xayrli kun!</h1>
+        <p id="kutSana"></p>
+      </div>
+      <div class="salom-amallar">
+        <button type="button" class="yangi-btn" id="berishBtn">Kitob berish</button>
+        <button type="button" class="yangi-btn ikkinchi" id="yangiOquvchiBtn">+ Yangi o'quvchi</button>
+        <button type="button" class="yangi-btn ikkinchi" id="yangiKitobBtn">+ Yangi kitob</button>
+        <button type="button" class="yangi-btn ikkinchi" id="buyurtmaBtn">Kitob buyurtmasi</button>
+      </div>
+    </div>
+
+    <div class="xulosa">
+      <button type="button" class="tile tile-btn" data-royxat="berildi"><span>Bugun berildi</span><b id="tBerildi"></b><small>Ro'yxatni ochish →</small></button>
+      <button type="button" class="tile tile-btn" data-royxat="qaytdi"><span>Bugun qaytarildi</span><b id="tQaytdi"></b><small>Ro'yxatni ochish →</small></button>
+      <button type="button" class="tile tile-btn" data-royxat="qolda"><span>Hozir o'quvchilar qo'lida</span><b id="tQolda"></b><small>Ro'yxatni ochish →</small></button>
+      <button type="button" class="tile tile-btn" data-royxat="kech" id="tKechTile"><span>Muddati o'tgan</span><b id="tKech"></b><small>Ro'yxatni ochish →</small></button>
+    </div>
+
+    <div class="panjara">
+      <section class="karta">
+        <div class="karta-bosh">
+          <h2>Muddati keldi yoki o'tdi</h2>
+          <span class="izoh-kichik">Bugun, ertaga va kechikkanlar</span>
+        </div>
+        <ul class="qarzdorlar" id="qarzdorlar"></ul>
+        <p class="bosh-xabar" id="qarzBosh" hidden>Hozircha muddati kelgan kitob yo'q.</p>
+      </section>
+      <section class="karta">
+        <h2>Bugungi harakatlar</h2>
+        <ul class="harakat" id="harakatlar"></ul>
+        <p class="bosh-xabar" id="harakatBosh" hidden>Bugun hali kitob berilmadi va qaytarilmadi.</p>
+      </section>
+    </div>
+
+    <section class="karta">
+      <div class="karta-bosh">
+        <h2>Kitob olish tarixi</h2>
+        <span class="qulf"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Tarix hech qachon o'chirilmaydi</span>
+      </div>
+      <div class="filtrlar">
+        <input class="qidiruv" id="tQidiruv" type="search" placeholder="O'quvchi yoki kitob nomi..." aria-label="Tarixdan qidirish">
+        <select id="tDavr" aria-label="Davr">
+          <option value="hammasi">Butun davr</option>
+          <option value="bugun">Bugun</option>
+          <option value="shuHafta">Shu hafta</option>
+          <option value="otganHafta">O'tgan hafta</option>
+          <option value="shuOy">Shu oy</option>
+          <option value="otganOy">O'tgan oy</option>
+          <option value="shuYil">Shu yil</option>
+        </select>
+        <select id="tSinf" aria-label="Sinf"></select>
+        <select id="tHolat" aria-label="Holat">
+          <option value="hammasi">Barcha holatlar</option>
+          <option value="qolda">Hozir qo'lda</option>
+          <option value="qaytgan">Qaytarilgan</option>
+          <option value="kech">Kechikkanlar</option>
+        </select>
+      </div>
+      <p class="natija-son" id="tSoni"></p>
+      <div class="jadval-quti">
+        <table>
+          <thead><tr><th>O'quvchi</th><th>Sinf</th><th>Kitob</th><th>Olingan</th><th>Muddat</th><th>Qaytarilgan</th><th>Holat</th></tr></thead>
+          <tbody id="tJadval"></tbody>
+        </table>
+      </div>
+      <p class="bosh-xabar" id="tBosh" hidden>Tanlangan filtr bo'yicha yozuv topilmadi.</p>
+      <button type="button" class="yana" id="tYana" hidden>Yana ko'rsatish</button>
+    </section>
+
+    <!-- Darsliklar: avgustda sinfga tarqatiladi, may oxirida yig'iladi, keyin sinflar o'tkaziladi -->
+    <section class="karta" id="darslikKarta">
+      <div class="karta-bosh">
+        <h2>Darsliklar</h2>
+        <span class="izoh-kichik">Avgustda tarqatiladi · may oxirida yig'iladi</span>
+      </div>
+      <div class="filtrlar">
+        <select id="dSinf" aria-label="Sinf"></select>
+        <input id="dYil" type="number" min="2000" max="2100" inputmode="numeric" aria-label="O'quv yili (tugash yili)" title="O'quv yili: 2026-2027 uchun 2027">
+      </div>
+      <div class="salom-amallar">
+        <button type="button" class="yangi-btn" id="dTarqatish">Darsliklarni tarqatish</button>
+        <button type="button" class="yangi-btn ikkinchi" id="dYigish">Hammasi qaytdi (yig'ish)</button>
+        <button type="button" class="yangi-btn ikkinchi" id="dOtkazish">Sinflarni o'tkazish</button>
+      </div>
+      <p class="natija-son" id="dHolat"></p>
+      <ul class="harakat" id="dOchiq"></ul>
+      <p class="bosh-xabar" id="dBosh" hidden>Bu sinfda qaytarilmagan darslik yo'q.</p>
+    </section>
+  </div>
+</section>
+
+<!-- ================= KUTUBXONACHI: RO'YXAT OYNASI (ko'rsatkich bosilganda) ================= -->
+<section class="ekran" id="ekranRoyxat" hidden>
+  <header class="yuqori">
+    <div class="yuqori-ichi">
+      <div class="logo">
+        <span class="mini-javon" aria-hidden="true">
+          <i style="height:14px;background:var(--b1)"></i><i style="height:18px;background:var(--b2)"></i><i style="height:12px;background:var(--b3)"></i><i style="height:16px;background:var(--b4)"></i><i style="height:15px;background:var(--b5)"></i>
+        </span>
+        Maktab kutubxonasi
+      </div>
+      <div class="foydalanuvchi">
+        <span class="avatar" aria-hidden="true" data-avatar></span>
+        <span class="ism-top" data-ism></span>
+        <button type="button" class="ovoz-btn">Ovoz: yoqiq</button>
+        <button type="button" class="chiqish" id="chiqishBtn4">Chiqish</button>
+      </div>
+    </div>
+  </header>
+  <div class="kabinet">
+    <button type="button" class="orqaga" id="rOrqaga">← Bosh panelga qaytish</button>
+    <div class="salom-qator">
+      <div class="salom">
+        <h1 id="rSarlavha"></h1>
+        <p id="rIzoh"></p>
+      </div>
+    </div>
+    <div class="royxat-tablar" id="rTablar" role="tablist" aria-label="Ro'yxat turi"></div>
+    <section class="karta">
+      <div class="karta-bosh">
+        <p class="natija-son" id="rSoni" style="margin:0"></p>
+        <input class="qidiruv" id="rQidiruv" type="search" placeholder="O'quvchi yoki kitob..." aria-label="Ro'yxatdan qidirish">
+      </div>
+      <div class="jadval-quti">
+        <table>
+          <thead><tr id="rSarlavhaQator"></tr></thead>
+          <tbody id="rJadval"></tbody>
+        </table>
+      </div>
+      <p class="bosh-xabar" id="rBosh" hidden></p>
+    </section>
+  </div>
+</section>
+
+<!-- ================= KUTUBXONACHI: KITOB BUYURTMASI OYNASI ================= -->
+<section class="ekran" id="ekranBuyurtma" hidden>
+  <header class="yuqori">
+    <div class="yuqori-ichi">
+      <div class="logo">
+        <span class="mini-javon" aria-hidden="true">
+          <i style="height:14px;background:var(--b1)"></i><i style="height:18px;background:var(--b2)"></i><i style="height:12px;background:var(--b3)"></i><i style="height:16px;background:var(--b4)"></i><i style="height:15px;background:var(--b5)"></i>
+        </span>
+        Maktab kutubxonasi
+      </div>
+      <div class="foydalanuvchi">
+        <span class="avatar" aria-hidden="true" data-avatar></span>
+        <span class="ism-top" data-ism></span>
+        <button type="button" class="ovoz-btn">Ovoz: yoqiq</button>
+        <button type="button" class="chiqish" id="chiqishBtn3">Chiqish</button>
+      </div>
+    </div>
+  </header>
+  <div class="kabinet">
+    <button type="button" class="orqaga" id="bOrqaga">← Bosh panelga qaytish</button>
+    <div class="salom-qator">
+      <div class="salom">
+        <h1>Kitob buyurtmasi</h1>
+        <p>Buyurtma avval direktorga boradi. Direktor tasdiqlasa, nazorat organiga yuboriladi.</p>
+      </div>
+    </div>
+
+    <div class="xulosa">
+      <div class="tile"><span>Direktorda</span><b id="bTDir"></b></div>
+      <div class="tile"><span>Nazoratda</span><b id="bTNaz"></b></div>
+      <div class="tile"><span>Tasdiqlangan</span><b id="bTHa"></b></div>
+      <div class="tile"><span>Rad etilgan</span><b id="bTYoq"></b></div>
+    </div>
+
+    <section class="karta">
+      <h2>Yangi buyurtma</h2>
+      <form id="bForma" class="b-forma" novalidate>
+        <div class="maydon" id="bKitobM">
+          <label for="bKitob">Kitob nomi</label>
+          <input id="bKitob" type="text" list="kitobRoyxat" placeholder="Masalan: Kichkina shahzoda" autocomplete="off">
+          <div class="xato-matn" id="bKitobX"></div>
+        </div>
+        <div class="maydon">
+          <label for="bMuallif">Muallif</label>
+          <input id="bMuallif" type="text" placeholder="Masalan: Antuan de Sent-Ekzyuperi" autocomplete="off">
+        </div>
+        <div class="maydon" id="bSoniM">
+          <label for="bSoni">Nusxa soni</label>
+          <input id="bSoni" type="number" min="1" max="500" value="10" inputmode="numeric">
+          <div class="xato-matn" id="bSoniX"></div>
+        </div>
+        <div class="maydon keng">
+          <label for="bSabab">Sabab yoki izoh <span class="teg">ixtiyoriy</span></label>
+          <textarea id="bSabab" rows="2" placeholder="Masalan: 7-sinflarda ko'p so'ralmoqda, navbat bor"></textarea>
+        </div>
+        <div class="keng"><button type="submit" class="kirish-btn">Direktorga yuborish</button></div>
+      </form>
+      <datalist id="kitobRoyxat"></datalist>
+    </section>
+
+    <section class="karta">
+      <h2>Buyurtmalarim</h2>
+      <div class="buyurtmalar" id="bRoyxat"></div>
+    </section>
+  </div>
+</section>
+
+<!-- ================= DIREKTOR OYNASI ================= -->
+<section class="ekran" id="ekranDirektor" hidden>
+  <header class="yuqori">
+    <div class="yuqori-ichi">
+      <div class="logo">
+        <span class="mini-javon" aria-hidden="true">
+          <i style="height:14px;background:var(--b1)"></i><i style="height:18px;background:var(--b2)"></i><i style="height:12px;background:var(--b3)"></i><i style="height:16px;background:var(--b4)"></i><i style="height:15px;background:var(--b5)"></i>
+        </span>
+        Maktab kutubxonasi
+      </div>
+      <div class="foydalanuvchi">
+        <span class="avatar" aria-hidden="true" data-avatar></span>
+        <span class="ism-top" data-ism></span>
+        <button type="button" class="ovoz-btn">Ovoz: yoqiq</button>
+        <button type="button" class="chiqish" id="dirChiqish">Chiqish</button>
+      </div>
+    </div>
+  </header>
+  <div class="kabinet">
+    <div class="salom-qator">
+      <div class="salom">
+        <h1 id="dirSalom">Assalomu alaykum!</h1>
+        <p id="dirSana"></p>
+      </div>
+    </div>
+
+    <div class="xulosa">
+      <button type="button" class="tile tile-btn" data-rejim="direktor" data-royxat="shuoy"><span>Shu oy o'qilgan kitoblar</span><b id="dBuOy"></b><small>Ro'yxatni ochish →</small></button>
+      <button type="button" class="tile tile-btn" data-rejim="direktor" data-royxat="qolda"><span>Hozir o'quvchilar qo'lida</span><b id="dQolda"></b><small>Ro'yxatni ochish →</small></button>
+      <button type="button" class="tile tile-btn" data-rejim="direktor" data-royxat="kech" id="dKechTile"><span>Muddati o'tgan</span><b id="dKech"></b><small>Ro'yxatni ochish →</small></button>
+      <button type="button" class="tile tile-btn" data-rejim="direktor" data-royxat="faol"><span>Faol o'quvchilar (30 kun)</span><b id="dFaol"></b><small>Ro'yxatni ochish →</small></button>
+    </div>
+
+    <section class="karta">
+      <div class="karta-bosh"><h2>Tasdiqlash kutilayotgan kitob buyurtmalari</h2><span class="izoh-kichik">Kutubxonachidan keldi. Tasdiqlasangiz, nazorat organiga boradi.</span></div>
+      <div class="buyurtmalar" id="dKutilmoqda"></div>
+      <p class="bosh-xabar" id="dKutBosh" hidden>Hozircha yangi buyurtma yo'q.</p>
+    </section>
+    <details class="karta yigma">
+      <summary>Ko'rib chiqilgan buyurtmalar (<span id="dKorSoni">0</span>)</summary>
+      <div class="buyurtmalar" id="dKorilgan"></div>
+    </details>
+
+    <section class="karta">
+      <div class="karta-bosh"><h2>Oyma-oy o'qilgan kitoblar</h2><span class="izoh-kichik">So'nggi 12 oy, qaytarilgan kitoblar soni</span></div>
+      <div class="oylik" id="dOylik"></div>
+    </section>
+
+
+    <div class="panjara teng">
+      <section class="karta">
+        <h2>Eng faol kitobxonlar · shu yil</h2>
+        <ol class="reyting" id="dFaollar"></ol>
+      </section>
+      <section class="karta">
+        <h2>Eng ko'p o'qilgan kitoblar · 12 oy</h2>
+        <ol class="reyting" id="dKitoblar"></ol>
+      </section>
+    </div>
+    <section class="karta">
+      <div class="karta-bosh">
+        <h2>Sovg'a berish jadvali · <span id="sovgaYil"></span>-yil</h2>
+        <span class="izoh-kichik" id="sovgaSoni"></span>
+      </div>
+      <div class="sovga-qoidalar" id="sovgaQoidalar"></div>
+      <div class="jadval-quti">
+        <table>
+          <thead><tr><th>#</th><th>O'quvchi</th><th>Sinf</th><th>O'qigan kitoblari</th><th>Daraja</th><th>Sovg'a</th><th>Holat</th></tr></thead>
+          <tbody id="sovgaJadval"></tbody>
+        </table>
+      </div>
+      <p class="bosh-xabar" id="sovgaBosh" hidden>Hozircha sovg'aga loyiq o'quvchi yo'q.</p>
+    </section>
+    <p class="izoh-kichik">Bu oynada o'quvchilar va ota-onalarning telefon raqamlari ko'rsatilmaydi.</p>
+  </div>
+</section>
+
+<!-- ================= NAZORAT ORGANI OYNASI ================= -->
+<section class="ekran" id="ekranNazorat" hidden>
+  <header class="yuqori">
+    <div class="yuqori-ichi">
+      <div class="logo">
+        <span class="mini-javon" aria-hidden="true">
+          <i style="height:14px;background:var(--b1)"></i><i style="height:18px;background:var(--b2)"></i><i style="height:12px;background:var(--b3)"></i><i style="height:16px;background:var(--b4)"></i><i style="height:15px;background:var(--b5)"></i>
+        </span>
+        Maktab kutubxonasi
+      </div>
+      <div class="foydalanuvchi">
+        <span class="avatar" aria-hidden="true" data-avatar></span>
+        <span class="ism-top" data-ism></span>
+        <button type="button" class="ovoz-btn">Ovoz: yoqiq</button>
+        <button type="button" class="chiqish" id="nazChiqish">Chiqish</button>
+      </div>
+    </div>
+  </header>
+  <div class="kabinet">
+    <div class="salom-qator">
+      <div class="salom">
+        <h1>Maktablar kutubxonalari</h1>
+        <p id="nazIsm"></p>
+      </div>
+    </div>
+
+    <div class="xulosa">
+      <div class="tile"><span>Maktablar</span><b id="nMaktab"></b></div>
+      <div class="tile"><span>O'quvchilar</span><b id="nOquvchi"></b></div>
+      <div class="tile"><span>Shu yil o'qilgan kitoblar</span><b id="nOqilgan"></b></div>
+      <div class="tile"><span>Bir o'quvchiga o'rtacha</span><b id="nOrtacha"></b></div>
+    </div>
+
+    <section class="karta">
+      <div class="karta-bosh"><h2>Direktor tasdiqlagan kitob buyurtmalari</h2><span class="izoh-kichik">Bu yerga faqat direktor roziligi olingan buyurtmalar keladi</span></div>
+      <div class="buyurtmalar" id="nKutilmoqda"></div>
+      <p class="bosh-xabar" id="nKutBosh" hidden>Hozircha tasdiqlash kutilayotgan buyurtma yo'q.</p>
+    </section>
+    <details class="karta yigma">
+      <summary>Ko'rib chiqilgan buyurtmalar (<span id="nKorSoni">0</span>)</summary>
+      <div class="buyurtmalar" id="nKorilgan"></div>
+    </details>
+
+    <section class="karta">
+      <div class="karta-bosh"><h2>Tumanlar kesimida</h2><span class="izoh-kichik">Bir o'quvchiga o'rtacha o'qilgan kitob</span></div>
+      <div class="tumanlar" id="nTumanlar"></div>
+    </section>
+
+    <section class="karta">
+      <div class="karta-bosh"><h2>Barcha maktablar</h2><span class="izoh-kichik">Ustun nomini bosib saralang</span></div>
+      <div class="filtrlar">
+        <input class="qidiruv" id="nQidiruv" type="search" placeholder="Maktab raqami..." aria-label="Maktab qidirish">
+        <select id="nTuman" aria-label="Tuman"></select>
+        <select id="nHolat" aria-label="Holat">
+          <option value="hammasi">Barcha holatlar</option>
+          <option value="yaxshi">Yaxshi</option>
+          <option value="ortacha">O'rtacha</option>
+          <option value="etibor">E'tibor kerak</option>
+        </select>
+      </div>
+      <p class="natija-son" id="nSoni"></p>
+      <div class="jadval-quti">
+        <table>
+          <thead><tr id="nSarlavha">
+            <th><button type="button" class="saralash" data-ustun="nom">Maktab</button></th>
+            <th><button type="button" class="saralash" data-ustun="tuman">Tuman</button></th>
+            <th><button type="button" class="saralash" data-ustun="oquvchi">O'quvchilar</button></th>
+            <th><button type="button" class="saralash" data-ustun="fond">Kitob fondi</button></th>
+            <th><button type="button" class="saralash" data-ustun="oqilgan">O'qilgan</button></th>
+            <th><button type="button" class="saralash" data-ustun="ortacha">O'rtacha</button></th>
+            <th><button type="button" class="saralash" data-ustun="kech">Kechikish</button></th>
+            <th>Holat</th>
+          </tr></thead>
+          <tbody id="nJadval"></tbody>
+        </table>
+      </div>
+      <p class="bosh-xabar" id="nBosh" hidden>Bunday maktab topilmadi.</p>
+    </section>
+    <p class="izoh-kichik">Bu oynada faqat umumiy statistika ko'rinadi: o'quvchilarning ismlari va telefon raqamlari ko'rsatilmaydi.</p>
+  </div>
+</section>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<!-- ================= YANGI O'QUVCHI AKKAUNTI (oyna ustidagi oyna) ================= -->
+<div class="modal-fon" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalSarlavha">
+    <div class="modal-bosh">
+      <h2 id="modalSarlavha">Yangi o'quvchi akkaunti</h2>
+      <button type="button" class="yop" id="modalYop" aria-label="Yopish">×</button>
+    </div>
+
+    <form id="yangiForma" novalidate>
+      <div class="maydon" id="yIsmM">
+        <label for="yIsm">Ism va familiya</label>
+        <input id="yIsm" type="text" placeholder="Masalan: Kamola Ergasheva" autocomplete="off">
+        <div class="xato-matn" id="yIsmX"></div>
+      </div>
+      <div class="maydon" id="ySinfM">
+        <label for="ySinf">Sinf</label>
+        <input id="ySinf" type="text" list="ySinfRoyxat" placeholder="Masalan: 7-B" autocomplete="off">
+        <datalist id="ySinfRoyxat"></datalist>
+        <div class="xato-matn" id="ySinfX"></div>
+      </div>
+      <div class="maydon" id="yOtaTelM">
+        <label for="yOtaTel">Ota-ona (vasiy) telefoni <span class="teg teg-maj">majburiy</span></label>
+        <input id="yOtaTel" type="tel" inputmode="tel" placeholder="+998 90 123 45 67" autocomplete="off">
+        <div class="xato-matn" id="yOtaTelX"></div>
+      </div>
+      <div class="maydon" id="yTelM">
+        <label for="yTel">O'quvchining telefoni <span class="teg">ixtiyoriy</span></label>
+        <input id="yTel" type="tel" inputmode="tel" placeholder="+998 __ ___ __ __" autocomplete="off">
+        <div class="xato-matn" id="yTelX"></div>
+      </div>
+      <div>
+        <label class="rozilik" for="yRozi"><input type="checkbox" id="yRozi"> Ota-ona (vasiy)dan shaxsiy ma'lumotlarni saqlash va kitob muddati haqida xabar berish uchun rozilik olindi</label>
+        <div class="xato-matn" id="yRoziX"></div>
+      </div>
+      <p class="izoh-kichik">Telefon raqamlarini faqat shu maktab kutubxonachisi ko'radi. Direktor va nazorat organlariga ko'rinmaydi.</p>
+      <button type="submit" class="kirish-btn">Akkaunt ochish</button>
+    </form>
+
+    <div id="yNatija" class="y-natija" hidden>
+      <p class="y-ok">Akkaunt ochildi. Kirish ma'lumotlarini o'quvchiga bering:</p>
+      <div class="kirish-malumot">
+        <div><span>Login</span><b id="yLogin"></b></div>
+        <div><span>Parol</span><b id="yParol"></b></div>
+      </div>
+      <button type="button" class="q-btn" id="yNusxa">Nusxa olish</button>
+      <p class="izoh-kichik">Parol faqat hozir ko'rsatiladi, uni qayta ko'rib bo'lmaydi. Yozib oling yoki nusxa oling.</p>
+      <div class="y-tugmalar">
+        <button type="button" class="yana" id="yYana">Yana o'quvchi qo'shish</button>
+        <button type="button" class="kirish-btn" id="yTayyor">Tayyor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= KITOB BERISH ================= -->
+<div class="modal-fon" id="modalBerish" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="berishSarlavha">
+    <div class="modal-bosh">
+      <h2 id="berishSarlavha">Kitob berish</h2>
+      <button type="button" class="yop" data-yop aria-label="Yopish">×</button>
+    </div>
+    <form id="berishForma" novalidate>
+      <div class="maydon" id="brOquvchiM">
+        <label for="brOquvchi">O'quvchi</label>
+        <input id="brOquvchi" type="text" list="brOquvchiRoyxat" placeholder="Ism yoki sinfni yozing..." autocomplete="off">
+        <datalist id="brOquvchiRoyxat"></datalist>
+        <div class="xato-matn" id="brOquvchiX"></div>
+      </div>
+      <div class="maydon" id="brKitobM">
+        <label for="brKitob">Kitob</label>
+        <input id="brKitob" type="text" list="brKitobRoyxat" placeholder="Kitob nomini yozing..." autocomplete="off">
+        <datalist id="brKitobRoyxat"></datalist>
+        <div class="xato-matn" id="brKitobX"></div>
+      </div>
+      <div class="maydon">
+        <label for="brKun">Necha kunga</label>
+        <select id="brKun" class="tanlov">
+          <option value="7">7 kun</option>
+          <option value="14" selected>14 kun</option>
+          <option value="21">21 kun</option>
+          <option value="30">30 kun</option>
+        </select>
+      </div>
+      <p class="izoh-kichik" id="brIzoh"></p>
+      <button type="submit" class="kirish-btn" id="berishYubor">Kitobni berish</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= YANGI KITOB ================= -->
+<div class="modal-fon" id="modalKitob" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="kitobSarlavha">
+    <div class="modal-bosh">
+      <h2 id="kitobSarlavha">Katalogga kitob qo'shish</h2>
+      <button type="button" class="yop" data-yop aria-label="Yopish">×</button>
+    </div>
+    <form id="kitobForma" novalidate>
+      <div class="maydon" id="ktNomiM">
+        <label for="ktNomi">Kitob nomi</label>
+        <input id="ktNomi" type="text" placeholder="Masalan: Ufq" autocomplete="off">
+        <div class="xato-matn" id="ktNomiX"></div>
+      </div>
+      <div class="maydon" id="ktMuallifM">
+        <label for="ktMuallif">Muallif</label>
+        <input id="ktMuallif" type="text" placeholder="Masalan: Said Ahmad" autocomplete="off">
+        <div class="xato-matn" id="ktMuallifX"></div>
+      </div>
+      <label class="qator-belgi"><input id="ktDarslik" type="checkbox"> Bu darslik (sinf bo'yicha tarqatiladi)</label>
+      <div class="maydon" id="ktSinfM" hidden>
+        <label for="ktSinf">Qaysi sinf darsligi</label>
+        <select id="ktSinf" aria-label="Sinf"></select>
+        <div class="xato-matn" id="ktSinfX"></div>
+      </div>
+      <div class="maydon" id="ktSoniM">
+        <label for="ktSoni">Nusxa soni</label>
+        <input id="ktSoni" type="number" min="1" max="1000" value="1" inputmode="numeric">
+        <div class="xato-matn" id="ktSoniX"></div>
+      </div>
+      <p class="izoh-kichik">Shu nom va muallifli kitob katalogda bo'lsa, yangi nusxalar unga qo'shiladi.</p>
+      <button type="submit" class="kirish-btn" id="kitobYubor">Qo'shish</button>
+    </form>
+  </div>
+</div>
+
+<div class="yuklash" id="yuklash" hidden><span class="yuklash-belgi" aria-hidden="true"></span><span>Yuklanmoqda...</span></div>
+
+<script src="js/config.js" defer></script>
+<script src="js/effektlar.js"></script>
+<script src="js/umumiy.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/animatsiya.js" defer></script>
+<script src="js/buyurtma.js" defer></script>
+<script src="js/oquvchi.js" defer></script>
+<script src="js/kutubxonachi.js" defer></script>
+<script src="js/royxat.js" defer></script>
+<script src="js/direktor.js" defer></script>
+<script src="js/nazorat.js" defer></script>
+<script src="js/kirish.js" defer></script>
+<script>
+  // Kirish videosi: brauzer seansida faqat bir marta chiqadi (sahifa yangilansa ham qayta chiqmaydi)
+  (function () {
+    let korilgan = false;
+    try { korilgan = sessionStorage.getItem("kutubxona-intro") === "1"; } catch (e) {}
+    // Video tugagach: sayt ochiladi. Sessiyani tiklash (kirish.js) shu paytdan boshlanadi.
+    const tugaganda = () => { window.saytOchildi = true; window.dispatchEvent(new Event("sayt-ochildi")); };
+    if (korilgan) { tugaganda(); return; }
+    try { sessionStorage.setItem("kutubxona-intro", "1"); } catch (e) {}
+    Effektlar.intro({ video: "media/intro.mp4", poster: "media/poster.jpg", tugaganda });
+  })();
+</script>
+</body>
+</html>
